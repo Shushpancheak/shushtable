@@ -3,9 +3,9 @@ A fast implementation of a hashtable on short strings.
 
 ## Efficiency analysis
 The original results:
-|![](img/O2g-orig.png) |![](img/03g-orig.png) |
-:-:-:
-|-O2 -g| -O3 -g|
+|![](img/O2g-orig.png)|![](img/03g-orig.png)|
+|---------------------|---------------------|
+|-O2 -g               |               -O3 -g|
 
 ## Build
 ```shell
