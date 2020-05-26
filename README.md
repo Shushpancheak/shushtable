@@ -9,8 +9,11 @@ The original results:
 
 In `KCacheGrind` we can notice two things:
 1. There is quite some time spent on calculating crc.
-2. There are too many cache misses.
+
 ![](img/for-orig.png)
+
+2. There are too many cache misses.
+
 ![](img/crc-orig.png)
 
 After applying some intrinsics to the code, we yield the following result:
