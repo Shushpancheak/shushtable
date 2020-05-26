@@ -15,9 +15,9 @@ make
 Download the repository and place it into your project directory. In your project's CMakeLists.txt file, insert the following lines:
 ```cmake
 ...
-add_subdirectory(@PROJECT_NAME@)
+add_subdirectory(shushtable)
 ...
-target_link_libraries(${PROJECT_NAME} @PROJECT_NAME@)
+target_link_libraries(${PROJECT_NAME} shushtable)
 ...
 ```
 

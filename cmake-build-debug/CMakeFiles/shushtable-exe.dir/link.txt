@@ -1,0 +1,1 @@
+/usr/bin/c++  -g   CMakeFiles/shushtable-exe.dir/src/main.cpp.o CMakeFiles/shushtable-exe.dir/src/shushtable.cpp.o  -o shushtable-exe 

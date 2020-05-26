@@ -1,0 +1,2 @@
+/usr/bin/ar qc libshushtable.a  CMakeFiles/shushtable.dir/src/main.cpp.o CMakeFiles/shushtable.dir/src/shushtable.cpp.o
+/usr/bin/ranlib libshushtable.a
