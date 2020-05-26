@@ -7,6 +7,22 @@ The original results:
 |---------------------|---------------------|
 |-O2 -g               |               -O3 -g|
 
+In `KCacheGrind` we can notice two things:
+1. There is quite some time spent on calculating crc.
+2. There are too many cache misses.
+![](img/for-orig.png)
+![](img/crc-orig.png)
+
+After applying some intrinsics to the code, we yield the following result:
+|![](img/02g-intrin.png)|![](img/O3g-intrin.png)|
+|-----------------------|-----------------------|
+|-O2 -g                 |              -O3 -g   |
+
+After allocating nodes in chunks of `PAGE_SIZE` length, we get:
+|![](img/02g-intrin-cache.png)|![](img/03g-intrin-cache.png)|
+|-----------------------------|-----------------------------|
+|-O2 -g                       |         -O3 -g              |
+
 ## Build
 ```shell
 mkdir build && cd build
