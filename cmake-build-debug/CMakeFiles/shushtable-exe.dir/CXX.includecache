@@ -46,3 +46,9 @@ fcntl.h
 unistd.h
 /home/shushpancheak/shushtable/src/unistd.h
 
+/home/shushpancheak/shushtable/src/shushtable.cpp
+shushtable/shushtable.hpp
+/home/shushpancheak/shushtable/src/shushtable/shushtable.hpp
+smmintrin.h
+-
+

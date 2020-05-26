@@ -26,6 +26,14 @@ public:
   bool Check();
 
 private:
+  void DeleteLastNode();
+  ShushNode* AllocateNewNode(const char* c_string);
+
+  ShushNode* cur_alloc_node = nullptr;
+  size_t cur_alloc_node_id = 0;
+  static const size_t MAX_ALLOC_NODES = 8;
+
+private:
   void RecalculateLoadFactor();
   /**
    * Uses CRC32C algorithm.
@@ -44,7 +52,7 @@ private:
    */
   ShushTableError AllocateBuckets();
   /**
-   * Finds the node containing the string in the table.
+   * Finds the string in the table
    * @return pointer to the node.
    */
   ShushNode* FindNode(const ShushString& shush_string);

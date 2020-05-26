@@ -41,6 +41,8 @@ set (
   CACHE STRING "Type of library to build. STATIC or SHARED."
 )
 
+add_definitions("-O3 -g -mfpmath=sse -mmmx -msse -msse4.2")
+
 #add_library (
 #  ${LIBRARY_NAME} ${LIBRARY_TYPE}
 #  ${SOURCES}

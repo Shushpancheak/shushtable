@@ -1,4 +1,5 @@
 #include "shushtable/shushtable.hpp"
+#include <smmintrin.h>
 
 ShushTable::ShushTable()
   : load_factor_(0)
@@ -13,7 +14,7 @@ ShushTable::~ShushTable() {
 }
 
 ShushTableError ShushTable::Add(const char* c_string) { $
-  auto* potential_node = new ShushNode(c_string);
+  auto* potential_node = AllocateNewNode(c_string);
   return AddNode(potential_node);
 }
 
@@ -27,26 +28,10 @@ void ShushTable::RecalculateLoadFactor() {
 }
 
 uint64_t ShushTable::Hash(const ShushString& shush_string) {
-  //TODO Use intel's intrinsics for crc32c computation.
-  static const auto SIZE_T_ONE = static_cast<size_t>(1);
-  static const auto SIZE       = sizeof(uint64_t);
-  static const auto MSB        = SIZE_T_ONE << (SIZE - 1);
-  static const auto POLYNOMIAL = 0x11EDC6F41;
   uint64_t crc = 0;
 
-  auto* data = reinterpret_cast<const uint64_t*>(shush_string.c_str());
-  for (; *data != 0; ++data) {
-    for (int8_t i = SIZE - 1; i > 0; --i) {
-      auto msb_set = crc & MSB;
-
-      crc <<= 1;
-      crc |= (*data & (SIZE_T_ONE << i)) ? 1 : 0;
-      if (!msb_set) {
-        continue;
-      }
-
-      crc ^= POLYNOMIAL;
-    }
+  for (auto* data = (uint64_t*)shush_string.c_str(); *data != 0; ++data) {
+    crc = _mm_crc32_u64(crc, *data);
   }
 
   return crc;
@@ -92,7 +77,7 @@ ShushTableError ShushTable::Rehash() {
 ShushTableError ShushTable::AddNode(ShushNode* potential_node) {
   assert(potential_node);
 
-  uint64_t id = Hash(potential_node->str_) % size_;
+  uint64_t id = Hash(potential_node->strings_) % size_;
 
   ShushNode* node = buckets_[id];
   ShushNode* prev_node = node;
@@ -103,8 +88,8 @@ ShushTableError ShushTable::AddNode(ShushNode* potential_node) {
   }
 
   for (; node != nullptr; prev_node = node, node = node->next) {
-    if (node->str_ == potential_node->str_) {
-      delete potential_node;
+    if (node->strings_ == potential_node->strings_) {
+      DeleteLastNode();
       return ShushTableError::ENTRY_ALREADY_EXISTS;
     }
   }
@@ -135,10 +120,29 @@ ShushNode* ShushTable::FindNode(const ShushString& shush_string) {
   uint64_t id = Hash(shush_string) % size_;
 
   for (ShushNode* node = buckets_[id]; node != nullptr; node = node->next) {
-    if (node->str_ == shush_string) {
+    if (node->strings_ == shush_string) {
       return node;
     }
   }
 
   return nullptr;
+}
+
+ShushNode *ShushTable::AllocateNewNode(const char *c_string) {
+  if (!cur_alloc_node || cur_alloc_node_id == MAX_ALLOC_NODES) {
+    cur_alloc_node = (ShushNode*)new char[MAX_ALLOC_NODES * sizeof(ShushNode)];
+    cur_alloc_node_id = 0;
+  }
+
+  auto* res = new (cur_alloc_node++) ShushNode(c_string);
+  ++cur_alloc_node_id;
+
+  return res;
+}
+void ShushTable::DeleteLastNode() {
+  if (!cur_alloc_node_id) {
+    return;
+  }
+  --cur_alloc_node;
+  --cur_alloc_node_id;
 }
