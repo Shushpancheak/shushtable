@@ -8,11 +8,11 @@ The original results:
 |-O2 -g               |               -O3 -g|
 
 In `KCacheGrind` we can notice two things:
-1. There is quite some time spent on calculating crc.
+1. There are too many cache misses.
 
 ![](img/for-orig.png)
 
-2. There are too many cache misses.
+2. There is quite some time spent on calculating crc.
 
 ![](img/crc-orig.png)
 
