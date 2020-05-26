@@ -26,6 +26,11 @@ After allocating nodes in chunks of `PAGE_SIZE` length, we get:
 |-----------------------------|-----------------------------|
 |-O2 -g                       |         -O3 -g              |
 
+Final result:
+
+![](img/final.png)
+
+
 ## Build
 ```shell
 mkdir build && cd build
